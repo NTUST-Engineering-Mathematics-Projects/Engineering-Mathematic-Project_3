@@ -2,7 +2,7 @@
 
 class DataManager
 {
-private:
+public:
 	int** InputImage; //輸入影像
 	int** OutputImage; //輸出影像
 	double ** FreqReal; // 傅立葉實數部分
@@ -12,6 +12,7 @@ private:
 
 public:
 	DataManager(int h, int w);
+	~DataManager();
 
 	//設定頻率資訊
 	void SetPixel(int x, int y, int pixelValue);

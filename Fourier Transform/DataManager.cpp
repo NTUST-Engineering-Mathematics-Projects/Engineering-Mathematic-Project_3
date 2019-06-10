@@ -29,6 +29,17 @@ DataManager::DataManager(int h, int w)
 		}
 }
 
+DataManager::~DataManager()
+{
+	for (int i = 0; i < ImageHeight; ++i)
+	{
+		delete[] InputImage[i];
+		delete[] OutputImage[i];
+		delete[] FreqReal[i];
+		delete[] FreqImag[i];
+	}
+}
+
 void DataManager::SetPixel(int x, int y, int pixelValue)
 {
 	InputImage[y][x] = pixelValue;
