@@ -541,38 +541,6 @@ private: System::Void lowpassFilterToolStripMenuItem_Click(System::Object^  send
 		}
 	}
 	pictureBox_OutputImage->Image = oImage;
-	/*FT* TestLow;
-	DataManager* DTest;
-	TestLow = new FT();
-	DTest = new DataManager(h, w);
-	for (int i = 0; i < h; ++i)
-	{
-		for (int j = 0; j < w; ++j)
-		{
-			DTest->InputImage[i][j] = dataManager->OutputImage[i][j];
-		}
-	}
-	TestLow->FastFourierTransform(DTest->GetInputImage(), DTest->GetOutputImage(), DTest->GetFreqReal(), DTest->GetFreqImag(), h, w);
-	Bitmap^ Image = gcnew Bitmap(w, h);
-	for (int i = 0; i < h; i++)
-	{
-		for (int j = 0; j < w; j++)
-		{
-			int valuePixeli = DTest->GetOutputImage()[i][j];
-
-			if (valuePixeli > 255)
-			{
-				valuePixeli = 255;
-			}
-			else if (valuePixeli < 0)
-			{
-				valuePixeli = 0;
-			}
-			Image->SetPixel(j, i, Color::FromArgb(valuePixeli, valuePixeli, valuePixeli));
-		}
-	}
-	pictureBox_OutputImage->Image = Image;
-	DTest->~DataManager();*/
 }
 private: System::Void highpassFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 

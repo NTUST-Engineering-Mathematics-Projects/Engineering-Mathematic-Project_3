@@ -176,8 +176,8 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 		}
 	}
 
-	std::vector<std::complex<double>> row;
-	row.clear();
+	std::vector<std::complex<double>> Temp;
+	Temp.clear();
 
 	// Row FFT
 	for (int i = 0; i < h; ++i)
@@ -185,15 +185,15 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 		for (int j = 0; j < w; ++j)
 		{
 			std::complex<double> temp(FreqReal[i][j], FreqImag[i][j]);
-			row.push_back(temp);
+			Temp.push_back(temp);
 		}
-		FFT(row, h, 0, 0);
+		FFT(Temp, h, 0, 0);
 		for (int j = 0; j < w; ++j)
 		{
-			FreqReal[i][j] = row[j].real() / N;
-			FreqImag[i][j] = row[j].imag() / N;
+			FreqReal[i][j] = Temp[j].real();
+			FreqImag[i][j] = Temp[j].imag();
 		}
-		row.clear();
+		Temp.clear();
 	}
 
 	// Column FFT
@@ -202,15 +202,15 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 		for (int j = 0; j < h; ++j)
 		{
 			std::complex<double> temp(FreqReal[j][i], FreqImag[j][i]);
-			row.push_back(temp);
+			Temp.push_back(temp);
 		}
-		FFT(row, h, 0, 0);
+		FFT(Temp, h, 0, 0);
 		for (int j = 0; j < w; ++j)
 		{
-			FreqReal[j][i] = row[j].real() / N;
-			FreqImag[j][i] = row[j].imag() / N;
+			FreqReal[j][i] = Temp[j].real();
+			FreqImag[j][i] = Temp[j].imag();
 		}
-		row.clear();
+		Temp.clear();
 	}
 
 	// Output Image
@@ -218,7 +218,7 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 	{
 		for (int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(FreqReal[j][i], 2.0f) + pow(FreqImag[j][i], 2.0f)) * N;
+			OutputImage[i][j] = sqrt(pow(FreqReal[j][i] / N, 2.0f) + pow(FreqImag[j][i] / N, 2.0f));
 		}
 	}
 }	
@@ -262,6 +262,7 @@ void FT::FFT(std::vector<std::complex<double>> &x, int h, int u, int v)
 void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, double ** FreqReal, double ** FreqImag, int h, int w)
 {
 	// h = w 必須是方正
+	int N = h;
 	std::vector<std::complex<double>> row;
 	row.clear();
 
@@ -276,8 +277,8 @@ void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, doub
 		InverseFFT(row, h);
 		for (int j = 0; j < w; ++j)
 		{
-			FreqReal[i][j] = row[j].real();
-			FreqImag[i][j] = row[j].imag();
+			FreqReal[i][j] = row[j].real() / N;
+			FreqImag[i][j] = row[j].imag() / N;
 		}
 		row.clear();
 	}
@@ -293,8 +294,8 @@ void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, doub
 		InverseFFT(row, h);
 		for (int j = 0; j < h; ++j)
 		{
-			FreqReal[j][i] = row[j].real();
-			FreqImag[j][i] = row[j].imag();
+			FreqReal[j][i] = row[j].real() / N;
+			FreqImag[j][i] = row[j].imag() / N;
 		}
 		row.clear();
 	}
@@ -376,7 +377,7 @@ void FT::LowpassFilter(int** inputImange, int** OutputImage, double ** pFreqReal
 	{
 		for (unsigned int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) * h;
+			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) / h;
 		}
 	}
 	// Delete filter
@@ -413,7 +414,7 @@ void FT::HighpassFilter(int** inputImange, int** OutputImage, double ** pFreqRea
 	{
 		for (unsigned int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) * h;
+			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) / h;
 		}
 	}
 	// Delete filter
