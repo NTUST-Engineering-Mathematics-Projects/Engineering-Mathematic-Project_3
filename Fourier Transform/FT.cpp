@@ -165,6 +165,7 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 {
 	// h = w 必須是方正
 	int N = h;
+	int M = w;
 
 	// initialize FreqImage
 	for (int i = 0; i < h; ++i)
@@ -187,7 +188,7 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 			std::complex<double> temp(FreqReal[i][j], FreqImag[i][j]);
 			Temp.push_back(temp);
 		}
-		FFT(Temp, h, 0, 0);
+		FFT(Temp, w, 0, 0);
 		for (int j = 0; j < w; ++j)
 		{
 			FreqReal[i][j] = Temp[j].real();
@@ -218,7 +219,7 @@ void FT::FastFourierTransform(int ** InputImage, int ** OutputImage, double ** F
 	{
 		for (int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(FreqReal[j][i] / N, 2.0f) + pow(FreqImag[j][i] / N, 2.0f));
+			OutputImage[i][j] = sqrt(pow(FreqReal[j][i] / sqrt(M*N), 2.0f) + pow(FreqImag[j][i] / sqrt(M*N), 2.0f));
 		}
 	}
 }	
@@ -263,6 +264,7 @@ void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, doub
 {
 	// h = w 必須是方正
 	int N = h;
+	int M = w;
 	std::vector<std::complex<double>> row;
 	row.clear();
 
@@ -274,11 +276,11 @@ void FT::InverseFastFourierTransform(int ** InputImage, int ** OutputImage, doub
 			std::complex<double> temp(FreqReal[i][j], FreqImag[i][j]);
 			row.push_back(temp);
 		}
-		InverseFFT(row, h);
+		InverseFFT(row, w);
 		for (int j = 0; j < w; ++j)
 		{
-			FreqReal[i][j] = row[j].real() / N;
-			FreqImag[i][j] = row[j].imag() / N;
+			FreqReal[i][j] = row[j].real() / M;
+			FreqImag[i][j] = row[j].imag() / M;
 		}
 		row.clear();
 	}
@@ -377,7 +379,7 @@ void FT::LowpassFilter(int** inputImange, int** OutputImage, double ** pFreqReal
 	{
 		for (unsigned int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) / h;
+			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i] / sqrt(h * w), double(2)) + pow(pFreqImag[j][i] / sqrt(h * w), double(2)));
 		}
 	}
 	// Delete filter
@@ -414,7 +416,7 @@ void FT::HighpassFilter(int** inputImange, int** OutputImage, double ** pFreqRea
 	{
 		for (unsigned int j = 0; j < w; ++j)
 		{
-			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i], double(2)) + pow(pFreqImag[j][i], double(2))) / h;
+			OutputImage[i][j] = sqrt(pow(pFreqReal[j][i] / sqrt(h * w), double(2)) + pow(pFreqImag[j][i] / sqrt(h * w), double(2)));
 		}
 	}
 	// Delete filter
